@@ -1,1 +1,21 @@
-# use here COPY 1_12 .
+FROM ubuntu
+
+WORKDIR /usr/src/app
+
+RUN apt-get update && apt-get install -y curl && apt-get install -y sudo
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
+RUN sudo apt install -y nodejs
+
+RUN npm install -g serve
+
+ENV REACT_APP_BACKEND_URL="http://localhost:8080"
+
+COPY 1_12 ./
+
+RUN npm install
+
+RUN npm run build
+
+EXPOSE 5001
+
+CMD ["serve", "-s", "-l", "5001", "build"]
